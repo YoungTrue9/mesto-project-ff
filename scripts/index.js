@@ -2,8 +2,8 @@
 import '../pages/index.css';
 import {initialCards} from './cards.js';
 // import {closePopupEsc} from './modal.js';
-import {createCard,likeCard,removeCard} from './cards.js'
-import {openModal,closeModal, closePopupByClick} from './modal.js'
+import {createCard,likeCard,removeCard} from './card.js'
+import {openModal,closeModal,handleCloseByOverlayClick} from './modal.js'
 // @todo: DOM узлы
 const cardsContainer = document.querySelector('.places__list');
 
@@ -22,8 +22,6 @@ function openImagePopup(event){
     imageDescription.textContent = event.target.alt
     openModal(imagePopUp)
 }
-
-
 
 //Вывод через цикл карточек 
 initialCards.forEach(function(element){
@@ -46,7 +44,7 @@ formCreateCard.addEventListener('submit', function (evt){
 
     cardsContainer.prepend(newCard);
     formCreateCard.reset();
-    closeModal() // поставил без аргумента так как проще работает и не нужно несколько раз писать
+    closeModal(addCardPopup) //закрываем новую карточку
 })
 
 
@@ -65,36 +63,31 @@ const contentAddButton = document.querySelector('.profile__add-button')
 // Попап добавления карточки
 const addCardPopup = document.querySelector('.popup_type_new-card')
 
-
-// Кнопка закрытия попапа КРЕСТИК
-const popupCloseCross = document.querySelector('.popup__close') 
-// popupCloseCross.forEach((popupCloseCross) =>{
-//     popupCloseCross.addEventListener('click', (evt)=>{
-//         if(evt.target.classList.contains("popup_is-opened")){
-//             closeModal(evt.target)
-//         }
-//     })
-// })
-
 // // ---- Здесь я делаю универсальную функцию нажатия вне зоны карточек чтобы они закрывались ----
 const popups = document.querySelectorAll('.popup');
 
 popups.forEach((popup) => {
-    popup.addEventListener('mousedown', closePopupByClick) 
-})
+    // находим кнопку закрытия
+    const closeButton = popup.querySelector('.popup__close')
+
+    // вешаем обработчик закрытия по клику на кнопку
+    closeButton.addEventListener('click', () => closeModal(popup))
+
+    // вешаем обработчик закрытия кликом по оверлею
+    popup.addEventListener('mousedown', handleCloseByOverlayClick) 
+}) 
+
 // //----------------------------------------------------------------------------------------------
+
 
 
 
 // Редактировани карточки по клику о человеке.
 openEditProfilePopupButton.addEventListener('click', function() {
+    nameInputs.value = profileTitle.textContent; 
+    jobInputs.value = profileJob.textContent; 
     openModal(popupTypeEdit)
-});
 
-
-// Редактировани карточки по клику о человеке. (закрытие)
-popupCloseCross.addEventListener('click', function() {
-    closeModal(popupTypeEdit)
 });
 
 
@@ -104,10 +97,6 @@ contentAddButton.addEventListener('click', function() {
 });
 
 
-// Редактировани карточки по клику о месте. (закрытие)
-popupCloseCross.addEventListener('click', function() {
-    closeModal(addCardPopup)
-});
 
 //Форма редактирования профиля
 const editProfileForm = document.forms['edit-profile'];
@@ -119,7 +108,7 @@ const profileJob = document.querySelector('.profile__description');
 const popupEditProfile = document.querySelector('.popup_type_edit');
 
 
-//Редактирование профиля
+//Редактирование профиля - (здесь происходит СОХРАНЕНИЕ данных которые мы ввели, а точнее их вывод.)
 function handleEditProfileForm(evt) {
     evt.preventDefault();
     profileTitle.textContent = nameInputs.value;
@@ -129,5 +118,6 @@ function handleEditProfileForm(evt) {
 
 //Обработчик формы редактирования профиля
 editProfileForm.addEventListener('submit', handleEditProfileForm);
+
 
 
