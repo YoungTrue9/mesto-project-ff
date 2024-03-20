@@ -9,12 +9,13 @@ export function closePopupEsc(evt) {
 // Функция открытия попап. (окно)
 export function openModal(popup){
     popup.classList.add('popup_is-opened')
-    document.addEventListener('keydown', closePopupEsc)
+    document.addEventListener('keydown', closePopupEsc) // вешаем обработчик закрытия 
 };
 
 // закрытие модального окна без аргументов
 export function closeModal(modal) {
     modal.classList.remove("popup_is-opened");  // удаляем из карточки
+    document.removeEventListener('keydown', closePopupEsc) // снимаем обработчик закрытия 
 }
 
 // Функция закрытия попап по оверлею
