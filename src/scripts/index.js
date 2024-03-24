@@ -33,9 +33,13 @@ const formCreateCard = document.querySelector('.popup_type_new-card .popup__form
 const nameInput = formCreateCard.querySelector('.popup__input_type_card-name')
 const linkInput = formCreateCard.querySelector('.popup__input_type_url')
 
+
+
 //форма в которую попадают значения и закрытие самой карточки информации о пользователи 
 formCreateCard.addEventListener('submit', function (evt){
     evt.preventDefault(); //удаляем стандарт
+
+
 
     const nameValue = nameInput.value; //передача информации имени
     const linkValue = linkInput.value; //передача информации картинки
@@ -121,3 +125,94 @@ editProfileForm.addEventListener('submit', handleEditProfileForm);
 
 
 
+
+
+
+const formElement = document.querySelector('.popup__form');
+const formInput = formElement.querySelector('.popup__input');
+const buttonElement = document.querySelector('.popup__button')
+
+const inputElement = document.querySelectorAll('.popup__input')
+
+
+// включение валидации вызовом enableValidation
+// все настройки передаются при вызове
+
+const validationConfig = { //классы для привязки
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
+  }; 
+
+
+//Показываем ошибочку
+const profileInputError = (formElement, nameInput, validationConfig, errorMessage) => {
+    const profileError = formElement.querySelector(`.${nameInput.id}-error`);
+    console.log(profileError)
+    inputElement.classList.add(validationConfig.inputErrorClass);
+    profileError.textContent = errorMessage;
+    profileError.classList.add(validationConfig.errorClass);
+};
+
+
+//Удаляем ошибочку
+const profileHideInputError  = (formElement, inputElement, validationConfig) => {
+    const profileError = formElement.querySelector(`.${nameInput.id}-error`);
+    inputElement.classList.remove(validationConfig.inputErrorClass);
+    profileError.classList.remove(validationConfig.errorClass);
+    profileError.textContent = ''
+};
+
+const isValidProfile = (formElement, inputElement, validationConfig) => {
+    if (inputElement.validity.patternMismatch) {
+        // встроенный метод setCustomValidity принимает на вход строку
+        // и заменяет ею стандартное сообщение об ошибке
+    inputElement.setCustomValidity(inputElement.dataset.errorProfile);
+  } else {
+        // если передать пустую строку, то будут доступны
+        // стандартные браузерные сообщения
+    inputElement.setCustomValidity("");
+  }
+
+//Сток браузерные сообщения
+  if (!inputElement.validity.valid) {
+    profileInputError(
+        formElement,
+        inputElement,
+        validationConfig,
+        inputElement.validationMessage
+    );
+  } else {
+    profileHideInputError(formElement, inputElement, validationConfig);
+  }
+}; 
+
+//поиск всех полей и форм
+const setEventListeners = (formElementProfile) => {
+    const inputList = Array.from(formElementProfile.querySelectorAll('.form__input'));
+    inputList.forEach((formInput) => {
+        formInput.addEventListener('input', () => {
+            isValidProfile(formElementProfile, formInput);
+            toggleButtonState(inputList, buttonElement);
+      });
+    });
+  }; 
+
+  //Поиск всех форм
+const enableValidation = (validationConfig) => {
+    const formElementList = Array.from(
+      document.querySelectorAll(validationConfig.formSelector)
+    );
+  
+    formElementList.forEach((formElement) => {
+      setEventListeners(formElement, validationConfig);
+    });
+    
+  };
+  enableValidation(validationConfig);
+
+
+  
