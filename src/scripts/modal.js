@@ -1,26 +1,42 @@
-// Функция закрытия через попап ESC 
-export function closePopupEsc(evt) {
-    if (evt.key === 'Escape') {
-      const activePopup = document.querySelector('.popup_is-opened');
-      closeModal(activePopup);
+import {popupsArray} from './constans.js';
+
+function handleEscClick(evt) {
+  if (evt.key === "Escape") {
+    const openedPopup = popupsArray.find(popup => popup.classList.contains('popup_is-opened'));
+    if (openedPopup) {
+      closePopup(openedPopup);
     }
+  }
 }
 
-// Функция открытия попап. (окно)
-export function openModal(popup){
-    popup.classList.add('popup_is-opened')
-    document.addEventListener('keydown', closePopupEsc) // вешаем обработчик закрытия 
+function handleOverlayClick(evt) { 
+    if (evt.target === evt.currentTarget) {
+      closePopup(evt.target);
+  }
+}
+
+function handleCloseButtonClick(evt) {
+  const button = evt.target;
+  const popup = button.closest('.popup');
+  closePopup(popup);
+}
+
+function openPopup(popup) {
+    popup.classList.add('popup_is-opened');
+    document.addEventListener("keydown", handleEscClick);
+}
+
+function closePopup(popup) {
+if (popup) {
+  popup.classList.remove("popup_is-opened");
+  document.removeEventListener("keydown", handleEscClick);
+  console.log('close')
+}
+}
+
+export { 
+    closePopup, 
+    openPopup,
+    handleOverlayClick,
+    handleCloseButtonClick
 };
-
-// закрытие модального окна без аргументов
-export function closeModal(modal) {
-    modal.classList.remove("popup_is-opened");  // удаляем из карточки
-    document.removeEventListener('keydown', closePopupEsc) // снимаем обработчик закрытия 
-}
-
-// Функция закрытия попап по оверлею
-export const handleCloseByOverlayClick = function (evt) {
-    if (evt.target.classList.contains('popup_is-opened')) { // проверяем наличие класса у evt.target через contains
-        closeModal(evt.target);
-      } 
-  };
