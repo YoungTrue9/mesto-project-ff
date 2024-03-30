@@ -1,7 +1,7 @@
 {
   "name": "glebfilippov",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.0.2",
+  "description": "https://github.com/YoungTrue9/mesto-project-ff/",
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production",
