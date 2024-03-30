@@ -15,9 +15,24 @@
   cursor: pointer;
   margin-left: auto;
 }
+/* .profile__image-edit-button{
+    background-color: rgba(0,0,0,.8);
+    background-image: url(ea50653….png);
+    background-position: 50%;
+    background-repeat: no-repeat;
+    block-size: 100%;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    inline-size: 100%;
+    opacity: 0;
+    position: absolute;
+    transition: .3s;
 
+} */
 .profile__add-button:hover {
   opacity: 0.6;
+  
 }
 
 @media screen and (max-width: 740px) {
